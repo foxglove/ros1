@@ -385,10 +385,10 @@
     moo "^0.5.1"
     nearley "^2.20.1"
 
-"@foxglove/xmlrpc@^1.1.3":
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/@foxglove/xmlrpc/-/xmlrpc-1.1.3.tgz#74047fa851d30fac3f999458d4ff490273c0a2a1"
-  integrity sha512-628/q40Udiudpg+bqroGzTW70MFRHJ4SMnCyDuP0iWxj+RKumyACq9Nb7HF+iOMRTM3SJISM/2fPCDzkIHyJVw==
+"@foxglove/xmlrpc@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@foxglove/xmlrpc/-/xmlrpc-1.1.4.tgz#63b2cdb2d1787788be87a87e433de9406b5e7a75"
+  integrity sha512-XkudpVbKKTxfnnl9tNqU5aahdzJ/9FCgWiLy+5BXYgvH8YXVu89UsRaO/uALLf4fZ2HhKpOSMGbV77rT1I592Q==
   dependencies:
     "@foxglove/just-fetch" "^1.2.4"
     byte-base64 "^1.1.0"
