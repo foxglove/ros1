@@ -1,4 +1,4 @@
-import { HttpServerNodejs } from "@foxglove/xmlrpc/dist/HttpServerNodejs";
+import { HttpServerNodejs } from "@foxglove/xmlrpc/nodejs";
 
 import { RosMaster } from "../RosMaster";
 import { RosNode } from "../RosNode";
