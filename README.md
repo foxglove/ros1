@@ -56,7 +56,6 @@ async function main() {
 }
 
 void main();
-...
 ```
 
 ### Test
