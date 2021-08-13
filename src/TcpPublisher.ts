@@ -111,11 +111,11 @@ export class TcpPublisher extends EventEmitter<TcpPublisherEvents> implements Pu
       addr = await socket.remoteAddress();
     } catch (err) {
       this._log?.warn?.(`Cannot resolve address for incoming tcp connection: ${err}`);
-      return socket.close().catch(noOp);
+      return await socket.close().catch(noOp);
     }
     if (addr == undefined) {
       this._log?.warn?.(`Cannot resolve address for incoming tcp connection`);
-      return socket.close().catch(noOp);
+      return await socket.close().catch(noOp);
     }
 
     const connectionId = this._getConnectionId();

@@ -37,7 +37,7 @@ export class RosParamClient extends RosXmlRpcClient {
       methodName: "subscribeParam",
       params: [callerId, callerApi, key],
     }));
-    return this._multiMethodCall(requests);
+    return await this._multiMethodCall(requests);
   }
 
   async unsubscribeParam(
@@ -57,7 +57,7 @@ export class RosParamClient extends RosXmlRpcClient {
       methodName: "unsubscribeParam",
       params: [callerId, callerApi, key],
     }));
-    return this._multiMethodCall(requests);
+    return await this._multiMethodCall(requests);
   }
 
   async hasParam(callerId: string, key: string): Promise<RosXmlRpcResponse> {
