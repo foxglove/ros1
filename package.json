@@ -30,7 +30,9 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "nodejs.d.ts",
+    "nodejs.js"
   ],
   "scripts": {
     "build": "tsc -b",
