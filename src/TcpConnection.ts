@@ -66,7 +66,7 @@ export class TcpConnection extends EventEmitter<TcpConnectionEvents> implements 
     socket.on("connect", this._handleConnect);
     socket.on("close", this._handleClose);
     socket.on("error", this._handleError);
-    socket.on("data", (chunk) => this._transformer.addData(chunk));
+    socket.on("data", this._handleData);
 
     this._transformer.on("message", this._handleMessage);
   }
@@ -184,6 +184,7 @@ export class TcpConnection extends EventEmitter<TcpConnectionEvents> implements 
     this._connected = false;
     if (!this._shutdown) {
       this._log?.warn?.(`${this.toString()} closed unexpectedly. reconnecting`);
+      this.emit("error", new Error("Connection closed unexpectedly"));
       void this._retryConnection();
     }
   };
@@ -191,6 +192,23 @@ export class TcpConnection extends EventEmitter<TcpConnectionEvents> implements 
   private _handleError = (err: Error): void => {
     if (!this._shutdown) {
       this._log?.warn?.(`${this.toString()} error: ${err}`);
+      this.emit("error", err);
+    }
+  };
+
+  private _handleData = (chunk: Uint8Array): void => {
+    if (this._shutdown) {
+      return;
+    }
+
+    try {
+      this._transformer.addData(chunk);
+    } catch (err) {
+      this._log?.warn?.(
+        `failed to decode ${chunk.length} byte chunk from tcp publisher ${this.toString()}: ${err}`,
+      );
+      // Close the socket, the stream is now corrupt
+      void this._socket.close();
       this.emit("error", err);
     }
   };

@@ -22,6 +22,7 @@ interface TcpPublisherEvents {
     destinationCallerId: string,
     client: Client,
   ) => void;
+  error: (err: Error) => void;
 }
 
 // Implements publishing support for the TCPROS transport. The actual TCP server
@@ -111,10 +112,12 @@ export class TcpPublisher extends EventEmitter<TcpPublisherEvents> implements Pu
       addr = await socket.remoteAddress();
     } catch (err) {
       this._log?.warn?.(`Cannot resolve address for incoming tcp connection: ${err}`);
+      this.emit("error", new Error(`Cannot resolve address for incoming tcp connection: ${err}`));
       return await socket.close().catch(noOp);
     }
     if (addr == undefined) {
       this._log?.warn?.(`Cannot resolve address for incoming tcp connection`);
+      this.emit("error", new Error(`Cannot resolve address for incoming tcp connection`));
       return await socket.close().catch(noOp);
     }
 
@@ -131,13 +134,22 @@ export class TcpPublisher extends EventEmitter<TcpPublisherEvents> implements Pu
 
     client.on("subscribe", (topic, destinationCallerId) => {
       this._pendingClients.delete(connectionId);
-      this.emit("connection", topic, connectionId, destinationCallerId, client);
+      if (!this._shutdown) {
+        this.emit("connection", topic, connectionId, destinationCallerId, client);
+      }
+    });
+    client.on("error", (err) => {
+      if (!this._shutdown) {
+        this._log?.warn?.(`tcp client ${client.toString()} error: ${err}`);
+        this.emit("error", new Error(`TCP client ${client.toString()} error: ${err}`));
+      }
     });
   };
 
   private _handleClose = (): void => {
     if (!this._shutdown) {
       this._log?.warn?.(`tcp server closed unexpectedly. shutting down tcp publisher`);
+      this.emit("error", new Error("TCP publisher closed unexpectedly"));
       this._shutdown = true;
     }
   };
@@ -145,6 +157,7 @@ export class TcpPublisher extends EventEmitter<TcpPublisherEvents> implements Pu
   private _handleError = (err: Error): void => {
     if (!this._shutdown) {
       this._log?.warn?.(`tcp publisher error: ${err}`);
+      this.emit("error", err);
     }
   };
 }

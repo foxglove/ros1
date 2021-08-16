@@ -19,12 +19,12 @@ export class RosXmlRpcClient {
   ): Promise<RosXmlRpcResponse> => {
     const res = await this._client.methodCall(methodName, args);
     if (!Array.isArray(res) || res.length !== 3) {
-      throw new Error(`malformed XML-RPC response`);
+      throw new Error(`Malformed XML-RPC response`);
     }
 
     const [code, msg] = res;
     if (typeof code !== "number" || typeof msg !== "string") {
-      throw new Error(`invalid code/msg, code="${code}", msg="${msg}"`);
+      throw new Error(`Invalid code/msg, code="${code}", msg="${msg}"`);
     }
     return res as RosXmlRpcResponse;
   };
@@ -39,11 +39,11 @@ export class RosXmlRpcClient {
       if (entry instanceof XmlRpcFault) {
         output.push(entry);
       } else if (!Array.isArray(entry) || entry.length !== 3) {
-        throw new Error(`malformed XML-RPC multicall response`);
+        throw new Error(`Malformed XML-RPC multicall response`);
       } else {
         const [code, msg] = entry;
         if (typeof code !== "number" || typeof msg !== "string") {
-          throw new Error(`invalid code/msg, code="${code}", msg="${msg}"`);
+          throw new Error(`Invalid code/msg, code="${code}", msg="${msg}"`);
         }
         output.push(entry as RosXmlRpcResponse);
       }

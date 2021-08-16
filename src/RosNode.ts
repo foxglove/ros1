@@ -64,6 +64,7 @@ const OK = 1;
 export interface RosNodeEvents {
   paramUpdate: (args: ParamUpdateArgs) => void;
   publisherUpdate: (args: PublisherUpdateArgs) => void;
+  error: (err: Error) => void;
 }
 
 export class RosNode extends EventEmitter<RosNodeEvents> {
@@ -112,6 +113,7 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
         log: options.log,
       });
       this._tcpPublisher.on("connection", this._handleTcpClientConnection);
+      this._tcpPublisher.on("error", this._handleTcpPublisherError);
     }
     this._log = options.log;
 
@@ -177,7 +179,7 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
 
     const addr = await this.tcpServerAddress();
     if (addr == undefined) {
-      throw new Error(`cannot publish ${topic} without a listening tcpServer`);
+      throw new Error(`Cannot publish ${topic} without a listening tcpServer`);
     }
 
     // Check if we are already publishing
@@ -220,12 +222,12 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
 
   async publish(topic: string, message: unknown): Promise<void> {
     if (this._tcpPublisher == undefined) {
-      throw new Error(`cannot publish without a tcpServer`);
+      throw new Error(`Cannot publish without a tcpServer`);
     }
 
     const publication = this.publications.get(topic);
     if (publication == undefined) {
-      throw new Error(`cannot publish to unadvertised topic "${topic}"`);
+      throw new Error(`Cannot publish to unadvertised topic "${topic}"`);
     }
 
     return await this._tcpPublisher.publish(publication, message);
@@ -354,12 +356,17 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
       const key = keys[i] as string;
       const entry = res[i];
       if (entry instanceof XmlRpcFault) {
-        this._log?.warn?.(`subscribeAllParams errored on "${key}" (${String(entry)})`);
+        this._log?.warn?.(`subscribeAllParams faulted on "${key}" (${entry})`);
+        this.emit("error", new Error(`subscribeAllParams faulted on "${key}" (${entry})`));
         continue;
       }
       const [status, msg, value] = entry as RosXmlRpcResponse;
       if (status !== OK) {
-        this._log?.warn?.(`subscribeAllParams failed for "${key}" (status=${status}): ${msg}`);
+        this._log?.warn?.(`subscribeAllParams not ok for "${key}" (status=${status}): ${msg}`);
+        this.emit(
+          "error",
+          new Error(`subscribeAllParams not ok for "${key}" (status=${status}): ${msg}`),
+        );
         continue;
       }
       // rosparam server returns an empty object ({}) if the parameter has not been set yet
@@ -383,6 +390,10 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
       const [status, msg] = res[i] as RosXmlRpcResponse;
       if (status !== OK) {
         this._log?.warn?.(`unsubscribeAllParams failed for "${key}" (status=${status}): ${msg}`);
+        this.emit(
+          "error",
+          new Error(`unsubscribeAllParams failed for "${key}" (status=${status}): ${msg}`),
+        );
         continue;
       }
     }
@@ -529,6 +540,10 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
     const publication = this.publications.get(topic);
     if (publication == undefined) {
       this._log?.warn?.(`${client.toString()} connected to non-published topic ${topic}`);
+      this.emit(
+        "error",
+        new Error(`${client.toString()} connected to non-published topic ${topic}`),
+      );
       return client.close();
     }
 
@@ -536,6 +551,10 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
       `adding subscriber ${client.toString()} (${destinationCallerId}) to topic ${topic}, connectionId ${connectionId}`,
     );
     publication.addSubscriber(connectionId, destinationCallerId, client);
+  };
+
+  private _handleTcpPublisherError = (err: Error) => {
+    this.emit("error", err);
   };
 
   private async _registerSubscriber(subscription: Subscription): Promise<string[]> {
@@ -615,6 +634,7 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
       // Warn and carry on, the rosmaster graph will be out of sync but there's
       // not much we can do (it may already be offline)
       this._log?.warn?.(err, "unregisterSubscriber");
+      this.emit("error", err instanceof Error ? err : new Error(err));
     }
   }
 
@@ -638,6 +658,7 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
       // Warn and carry on, the rosmaster graph will be out of sync but there's
       // not much we can do (it may already be offline)
       this._log?.warn?.(err, "unregisterPublisher");
+      this.emit("error", err instanceof Error ? err : new Error(err));
     }
   }
 
@@ -722,6 +743,12 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
       // retry loop
       this._log?.warn?.(
         `subscribing to ${topic} at ${pubUrl} failed (${err}), this connection will be dropped`,
+      );
+      this.emit(
+        "error",
+        new Error(
+          `Subscribing to ${topic} at ${pubUrl} failed (${err}), this connection will be dropped`,
+        ),
       );
       return;
     }

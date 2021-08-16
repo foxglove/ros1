@@ -19,6 +19,7 @@ export interface Connection {
     ) => void,
   ): this;
   on(eventName: "message", listener: (msg: unknown, data: Uint8Array) => void): this;
+  on(eventName: "error", listener: (err: Error) => void): this;
 
   transportType(): string;
 

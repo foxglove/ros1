@@ -13,6 +13,9 @@ describe("RosNode", () => {
     const rosMasterUri = rosMaster.url() as string;
     expect(typeof rosMasterUri).toBe("string");
 
+    let errA: Error | undefined;
+    let errB: Error | undefined;
+
     const nodeA = new RosNode({
       name: "/nodeA",
       hostname: "localhost",
@@ -23,6 +26,7 @@ describe("RosNode", () => {
       tcpServer: await TcpServerNode.Listen({}),
       // log: console,
     });
+    nodeA.on("error", (err) => (errA = err));
 
     const nodeB = new RosNode({
       name: "/nodeB",
@@ -34,6 +38,7 @@ describe("RosNode", () => {
       tcpServer: await TcpServerNode.Listen({}),
       // log: console,
     });
+    nodeB.on("error", (err) => (errB = err));
 
     await nodeA.start();
 
@@ -82,5 +87,8 @@ describe("RosNode", () => {
     nodeA.shutdown();
     await new Promise((r) => setTimeout(r, 100));
     rosMaster.close();
+
+    expect(errA).toBeUndefined();
+    expect(errB).toBeUndefined();
   });
 });
