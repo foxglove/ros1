@@ -6,7 +6,6 @@ import { Publication } from "./Publication";
 import { RosTcpMessageStream } from "./RosTcpMessageStream";
 import { TcpConnection } from "./TcpConnection";
 import { TcpSocket } from "./TcpTypes";
-import { concatData } from "./concatData";
 
 export type PublicationLookup = (topic: string) => Publication | undefined;
 
@@ -22,6 +21,7 @@ type TcpClientOpts = {
 export interface TcpClientEvents {
   close: () => void;
   subscribe: (topic: string, destinationCallerId: string) => void;
+  error: (err: Error) => void;
 }
 
 export class TcpClient extends EventEmitter<TcpClientEvents> implements Client {
@@ -51,7 +51,7 @@ export class TcpClient extends EventEmitter<TcpClientEvents> implements Client {
 
     socket.on("close", this._handleClose);
     socket.on("error", this._handleError);
-    socket.on("data", (chunk) => this._transformer.addData(chunk));
+    socket.on("data", this._handleData);
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this._transformer.on("message", this._handleMessage);
@@ -72,10 +72,10 @@ export class TcpClient extends EventEmitter<TcpClientEvents> implements Client {
   }
 
   async write(data: Uint8Array): Promise<void> {
-    this._stats.messagesSent++;
-    this._stats.bytesSent += data.length;
     try {
       await this._socket.write(data);
+      this._stats.messagesSent++;
+      this._stats.bytesSent += data.length;
     } catch (err) {
       this._log?.warn?.(`failed to write ${data.length} bytes to ${this.toString()}: ${err}`);
     }
@@ -110,21 +110,19 @@ export class TcpClient extends EventEmitter<TcpClientEvents> implements Client {
   private async _writeHeader(header: Map<string, string>): Promise<void> {
     const data = TcpConnection.SerializeHeader(header);
 
-    // Serialize the 4-byte length
-    const lenBuffer = new ArrayBuffer(4);
-    const view = new DataView(lenBuffer);
-    view.setUint32(0, data.byteLength, true);
-
-    const payload = concatData([new Uint8Array(lenBuffer), data]);
-
-    this._stats.bytesSent += payload.length;
-
     // Write the serialized header payload
+    const buffer = new ArrayBuffer(4 + data.length);
+    const payload = new Uint8Array(buffer);
+    const view = new DataView(buffer);
+    view.setUint32(0, data.length, true);
+    payload.set(data, 4);
+
     try {
       await this._socket.write(payload);
+      this._stats.bytesSent += payload.length;
     } catch (err) {
       this._log?.warn?.(
-        `failed to write ${payload.length} byte header to ${this.toString()}: ${err}`,
+        `failed to write ${data.length + 4} byte header to ${this.toString()}: ${err}`,
       );
     }
   }
@@ -136,6 +134,20 @@ export class TcpClient extends EventEmitter<TcpClientEvents> implements Client {
 
   private _handleError = (err: Error) => {
     this._log?.warn?.(`tcp client ${this.toString()} error: ${err}`);
+    this.emit("error", err);
+  };
+
+  private _handleData = (chunk: Uint8Array) => {
+    try {
+      this._transformer.addData(chunk);
+    } catch (err) {
+      this._log?.warn?.(
+        `failed to decode ${chunk.length} byte chunk from tcp client ${this.toString()}: ${err}`,
+      );
+      // Close the socket, the stream is now corrupt
+      void this._socket.close();
+      this.emit("error", err);
+    }
   };
 
   private _handleMessage = async (msgData: Uint8Array) => {

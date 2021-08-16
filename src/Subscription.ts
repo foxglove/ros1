@@ -39,6 +39,7 @@ export interface SubscriptionEvents {
     msgReader: LazyMessageReader,
   ) => void;
   message: (msg: unknown, data: Uint8Array, publisher: PublisherLink) => void;
+  error: (err: Error) => void;
 }
 
 export class Subscription extends EventEmitter<SubscriptionEvents> {
@@ -78,6 +79,7 @@ export class Subscription extends EventEmitter<SubscriptionEvents> {
 
     connection.on("header", (header, def, reader) => this.emit("header", header, def, reader));
     connection.on("message", (msg, data) => this.emit("message", msg, data, publisher));
+    connection.on("error", (err) => this.emit("error", err));
   }
 
   removePublisher(connectionId: number): boolean {

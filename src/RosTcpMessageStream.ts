@@ -2,6 +2,10 @@ import { EventEmitter } from "eventemitter3";
 
 import { concatData } from "./concatData";
 
+// This is the maximum message length allowed by ros_comm. See
+// <https://github.com/strawlab/ros_comm/blob/master/clients/cpp/roscpp/src/libros/transport_publisher_link.cpp#L164-L167>
+const MAX_MSG_LENGTH = 1000000000;
+
 export interface RosTcpMessageStreamEvents {
   message: (message: Uint8Array) => void;
 }
@@ -38,16 +42,24 @@ export class RosTcpMessageStream extends EventEmitter<RosTcpMessageStreamEvents>
         // reading a message length field
         this._bytesNeeded = 4;
         this.emit("message", payload);
+        this._inMessage = false;
       } else {
-        // Decoded the message length field and transition to reading a message
+        // Decode the message length field and transition to reading a message
         this._bytesNeeded = new DataView(
           payload.buffer,
           payload.byteOffset,
           payload.byteLength,
         ).getUint32(0, true);
-      }
 
-      this._inMessage = !this._inMessage;
+        if (this._bytesNeeded > MAX_MSG_LENGTH) {
+          throw new Error(`Invalid message length of ${this._bytesNeeded} decoded in a tcp stream`);
+        } else if (this._bytesNeeded === 0) {
+          this._bytesNeeded = 4;
+          this.emit("message", new Uint8Array());
+        } else {
+          this._inMessage = true;
+        }
+      }
     }
   }
 }
