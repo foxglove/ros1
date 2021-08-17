@@ -232,10 +232,19 @@ export class TcpConnection extends EventEmitter<TcpConnectionEvents> implements 
       this._stats.messagesReceived++;
 
       if (this._msgReader != null) {
-        const msg = this._msgReader.readMessage(
-          Buffer.from(msgData.buffer, msgData.byteOffset, msgData.length),
-        );
-        this.emit("message", msg, msgData);
+        try {
+          const bytes = new Uint8Array(msgData.buffer, msgData.byteOffset, msgData.length);
+          const msgSize = this._msgReader.size(bytes);
+          if (msgSize > bytes.byteLength) {
+            throw new Error(
+              `Cannot read ${msgSize} byte message from ${bytes.byteLength} byte buffer`,
+            );
+          }
+          const msg = this._msgReader.readMessage(bytes);
+          this.emit("message", msg, msgData);
+        } catch (err) {
+          this.emit("error", err);
+        }
       }
     }
   };
