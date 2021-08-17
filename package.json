@@ -40,7 +40,8 @@
     "lint": "eslint --report-unused-disable-directives --fix .",
     "prepack": "yarn build",
     "prepublishOnly": "yarn lint:ci && yarn test",
-    "test": "jest"
+    "test": "jest",
+    "roscore": "node -r esbuild-runner/register src/nodejs/roscore.ts"
   },
   "engines": {
     "node": ">= 14"
@@ -53,6 +54,8 @@
     "@types/prettier": "^2.3.2",
     "@typescript-eslint/eslint-plugin": "4.29.1",
     "@typescript-eslint/parser": "4.29.1",
+    "esbuild": "0.12.20",
+    "esbuild-runner": "2.2.0",
     "eslint": "7.32.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-es": "4.1.0",
