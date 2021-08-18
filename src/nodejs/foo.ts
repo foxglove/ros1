@@ -21,7 +21,8 @@ async function main() {
     await rosNode.start();
 
     const sub = rosNode.subscribe({
-      topic: "/sample",
+      topic: "/battery_state",
+      dataType: "sensor_msgs/BatteryState",
     });
 
     sub.on("message", (msg, data, pub) => {
@@ -31,6 +32,8 @@ async function main() {
         } bytes from ${pub.connection.getTransportInfo()})`,
       );
     });
+
+    await new Promise((resolve) => setTimeout(resolve, 10000));
   } catch (err) {
     console.error(err);
   } finally {
