@@ -41,7 +41,8 @@
     "prepack": "yarn build",
     "prepublishOnly": "yarn lint:ci && yarn test",
     "test": "jest",
-    "roscore": "node -r esbuild-runner/register src/nodejs/roscore.ts"
+    "roscore": "node -r esbuild-runner/register src/nodejs/roscore.ts",
+    "foo": "node -r esbuild-runner/register src/nodejs/foo.ts"
   },
   "engines": {
     "node": ">= 14"
