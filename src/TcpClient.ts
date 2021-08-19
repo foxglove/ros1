@@ -11,8 +11,6 @@ export type PublicationLookup = (topic: string) => Publication | undefined;
 
 type TcpClientOpts = {
   socket: TcpSocket;
-  address: string;
-  port: number;
   nodeName: string;
   getPublication: PublicationLookup;
   log?: LoggerService;
@@ -26,28 +24,25 @@ export interface TcpClientEvents {
 
 export class TcpClient extends EventEmitter<TcpClientEvents> implements Client {
   private _socket: TcpSocket;
-  private _address: string;
-  private _port: number;
+  private _address?: string;
+  private _port?: number;
+  private _transportInfo: string;
   private _nodeName: string;
   private _connected = true;
   private _receivedHeader = false;
-  private _transportInfo: string;
   private _stats: ClientStats = { bytesSent: 0, bytesReceived: 0, messagesSent: 0 };
   private _getPublication: PublicationLookup;
   private _log?: LoggerService;
   private _transformer: RosTcpMessageStream;
 
-  constructor({ socket, address, port, nodeName, getPublication, log }: TcpClientOpts) {
+  constructor({ socket, nodeName, getPublication, log }: TcpClientOpts) {
     super();
     this._socket = socket;
-    this._address = address;
-    this._port = port;
     this._nodeName = nodeName;
     this._getPublication = getPublication;
     this._log = log;
     this._transformer = new RosTcpMessageStream();
-    this._transportInfo = `TCPROS connection to [${address}:${port}]`;
-    void this._getTransportInfo().then((info) => (this._transportInfo = info));
+    this._transportInfo = `TCPROS establishing connection`;
 
     socket.on("close", this._handleClose);
     socket.on("error", this._handleError);
@@ -55,6 +50,8 @@ export class TcpClient extends EventEmitter<TcpClientEvents> implements Client {
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this._transformer.on("message", this._handleMessage);
+
+    void this._updateTransportInfo();
 
     // Wait for the client to send the initial connection header
   }
@@ -92,19 +89,29 @@ export class TcpClient extends EventEmitter<TcpClientEvents> implements Client {
   }
 
   override toString(): string {
-    return TcpConnection.Uri(this._address, this._port);
+    return TcpConnection.Uri(this._address ?? "<unknown>", this._port ?? 0);
   }
 
-  private _getTransportInfo = async (): Promise<string> => {
-    const localPort = (await this._socket.localAddress())?.port ?? -1;
-    const addr = await this._socket.remoteAddress();
-    const fd = (await this._socket.fd()) ?? -1;
-    if (addr != null) {
+  private _updateTransportInfo = async (): Promise<void> => {
+    let fd = -1;
+    try {
+      fd = (await this._socket.fd()) ?? -1;
+      const localPort = (await this._socket.localAddress())?.port ?? -1;
+      const addr = await this._socket.remoteAddress();
+      if (addr == undefined) {
+        throw new Error(`Socket ${fd} on local port ${localPort} could not resolve remoteAddress`);
+      }
+
       const { address, port } = addr;
       const host = address.includes(":") ? `[${address}]` : address;
-      return `TCPROS connection on port ${localPort} to [${host}:${port} on socket ${fd}]`;
+      this._address = address;
+      this._port = port;
+      this._transportInfo = `TCPROS connection on port ${localPort} to [${host}:${port} on socket ${fd}]`;
+    } catch (err) {
+      this._transportInfo = `TCPROS not connected [socket ${fd}]`;
+      this._log?.warn?.(`Cannot resolve address for tcp connection: ${err}`);
+      this.emit("error", new Error(`Cannot resolve address for tcp connection: ${err}`));
     }
-    return `TCPROS not connected [socket ${fd}]`;
   };
 
   private async _writeHeader(header: Map<string, string>): Promise<void> {

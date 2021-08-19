@@ -107,29 +107,16 @@ export class TcpPublisher extends EventEmitter<TcpPublisherEvents> implements Pu
       return;
     }
 
-    let addr: TcpAddress | undefined;
-    try {
-      addr = await socket.remoteAddress();
-    } catch (err) {
-      this._log?.warn?.(`Cannot resolve address for incoming tcp connection: ${err}`);
-      this.emit("error", new Error(`Cannot resolve address for incoming tcp connection: ${err}`));
-      return await socket.close().catch(noOp);
-    }
-    if (addr == undefined) {
-      this._log?.warn?.(`Cannot resolve address for incoming tcp connection`);
-      this.emit("error", new Error(`Cannot resolve address for incoming tcp connection`));
-      return await socket.close().catch(noOp);
-    }
-
-    const connectionId = this._getConnectionId();
+    // TcpClient must be instantiated before any async calls since it registers event handlers
+    // that may not be setup in time otherwise
     const client = new TcpClient({
       socket,
-      address: addr.address,
-      port: addr.port,
       nodeName: this._nodeName,
       getPublication: this._getPublication,
       log: this._log,
     });
+
+    const connectionId = this._getConnectionId();
     this._pendingClients.set(connectionId, client);
 
     client.on("subscribe", (topic, destinationCallerId) => {
