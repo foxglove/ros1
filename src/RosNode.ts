@@ -1,12 +1,12 @@
 import {
   parse as parseMessageDefinition,
+  md5 as rosMsgMd5sum,
   stringify as rosMsgDefinitionText,
   RosMsgDefinition,
 } from "@foxglove/rosmsg";
 import { MessageWriter } from "@foxglove/rosmsg-serialization";
 import { HttpServer, XmlRpcFault, XmlRpcValue } from "@foxglove/xmlrpc";
 import { EventEmitter } from "eventemitter3";
-import { Md5 } from "md5-typescript";
 
 import { Client } from "./Client";
 import { LoggerService } from "./LoggerService";
@@ -193,7 +193,7 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
       options.messageDefinition ?? parseMessageDefinition(options.messageDefinitionText ?? "");
     const canonicalMsgDefText = rosMsgDefinitionText(messageDefinition);
     const messageDefinitionText = options.messageDefinitionText ?? canonicalMsgDefText;
-    const md5sum = options.md5sum ?? Md5.init(canonicalMsgDefText);
+    const md5sum = options.md5sum ?? rosMsgMd5sum(messageDefinition);
     const messageWriter = new MessageWriter(messageDefinition);
 
     publication = new Publication(
