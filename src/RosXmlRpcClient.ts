@@ -6,7 +6,7 @@ export class RosXmlRpcClient {
   private _client: XmlRpcClient;
 
   constructor(url: string) {
-    this._client = new XmlRpcClient(url, { encoding: "utf8" });
+    this._client = new XmlRpcClient(url, { encoding: "utf-8" });
   }
 
   url(): string {
