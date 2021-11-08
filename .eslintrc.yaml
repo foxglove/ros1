@@ -4,6 +4,7 @@ env:
 
 ignorePatterns:
   - dist
+  - examples
 
 extends:
   - plugin:@foxglove/base
