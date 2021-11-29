@@ -203,7 +203,8 @@ export class TcpConnection extends EventEmitter<TcpConnectionEvents> implements 
 
     try {
       this._transformer.addData(chunk);
-    } catch (err) {
+    } catch (unk) {
+      const err = unk instanceof Error ? unk : new Error(unk as string);
       this._log?.warn?.(
         `failed to decode ${chunk.length} byte chunk from tcp publisher ${this.toString()}: ${err}`,
       );
@@ -242,7 +243,8 @@ export class TcpConnection extends EventEmitter<TcpConnectionEvents> implements 
           }
           const msg = this._msgReader.readMessage(bytes);
           this.emit("message", msg, msgData);
-        } catch (err) {
+        } catch (unk) {
+          const err = unk instanceof Error ? unk : new Error(unk as string);
           this.emit("error", err);
         }
       }

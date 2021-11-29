@@ -630,11 +630,12 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
       }
 
       this._log?.debug?.(`unregistered subscriber to ${topic}`);
-    } catch (err) {
+    } catch (unk) {
       // Warn and carry on, the rosmaster graph will be out of sync but there's
       // not much we can do (it may already be offline)
-      this._log?.warn?.(err, "unregisterSubscriber");
-      this.emit("error", err instanceof Error ? err : new Error(err));
+      const err = unk instanceof Error ? unk : new Error(unk as string);
+      this._log?.warn?.(err.message, "unregisterSubscriber");
+      this.emit("error", err);
     }
   }
 
@@ -654,11 +655,12 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
       }
 
       this._log?.debug?.(`unregistered publisher for ${topic}`);
-    } catch (err) {
+    } catch (unk) {
       // Warn and carry on, the rosmaster graph will be out of sync but there's
       // not much we can do (it may already be offline)
-      this._log?.warn?.(err, "unregisterPublisher");
-      this.emit("error", err instanceof Error ? err : new Error(err));
+      const err = unk instanceof Error ? unk : new Error(unk as string);
+      this._log?.warn?.(err.message, "unregisterPublisher");
+      this.emit("error", err);
     }
   }
 

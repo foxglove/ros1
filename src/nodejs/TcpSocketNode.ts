@@ -89,6 +89,7 @@ export class TcpSocketNode extends EventEmitter<TcpSocketEvents> implements TcpS
     });
   }
 
+  // eslint-disable-next-line @foxglove/no-boolean-parameters
   async setNoDelay(noDelay?: boolean): Promise<void> {
     this._socket.setNoDelay(noDelay);
   }
