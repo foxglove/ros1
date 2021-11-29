@@ -147,7 +147,8 @@ export class TcpClient extends EventEmitter<TcpClientEvents> implements Client {
   private _handleData = (chunk: Uint8Array) => {
     try {
       this._transformer.addData(chunk);
-    } catch (err) {
+    } catch (unk) {
+      const err = unk instanceof Error ? unk : new Error(unk as string);
       this._log?.warn?.(
         `failed to decode ${chunk.length} byte chunk from tcp client ${this.toString()}: ${err}`,
       );

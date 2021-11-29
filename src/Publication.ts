@@ -26,6 +26,7 @@ export class Publication {
     name: string,
     md5sum: string,
     dataType: string,
+    // eslint-disable-next-line @foxglove/no-boolean-parameters
     latching: boolean,
     messageDefinition: RosMsgDefinition[],
     messageDefinitionText: string,
