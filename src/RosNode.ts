@@ -283,6 +283,10 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
     if (status !== OK) {
       throw new Error(`setParam returned failure (status=${status}): ${msg}`);
     }
+
+    // Also do a local update because ROS param server won't notify us if
+    // we initiated the parameter update.
+    this._handleParamUpdate(key, value, this.name);
   }
 
   async subscribeParam(key: string): Promise<XmlRpcValue> {
