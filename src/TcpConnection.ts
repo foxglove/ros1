@@ -146,8 +146,8 @@ export class TcpConnection extends EventEmitter<TcpConnectionEvents> implements 
     const data = new Uint8Array(totalLen);
 
     // Write the 4-byte length
-    const view = new DataView(data);
-    view.setUint32(0, data.byteLength, true);
+    const view = new DataView(data.buffer, data.byteOffset, data.byteLength);
+    view.setUint32(0, serializedHeader.byteLength, true);
 
     // Copy the serialized header into the final buffer
     data.set(serializedHeader, 4);
@@ -192,8 +192,8 @@ export class TcpConnection extends EventEmitter<TcpConnectionEvents> implements 
       // with its own header then start streaming messages
       await this.writeHeader();
     } catch (err) {
-      this._log?.warn?.(`${this.toString()} failed to write header. reconnecting`);
-      this.emit("error", new Error("Header write failed"));
+      this._log?.warn?.(`${this.toString()} failed to write header. reconnecting: ${err}`);
+      this.emit("error", new Error(`Header write failed: ${err}`));
       this._retryConnection();
     }
   };
