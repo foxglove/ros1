@@ -23,3 +23,17 @@ export async function backoff(
     setTimeout(resolve, backoffTime(retries, maxMs, maxJitterMs, rng)),
   );
 }
+
+// Continue to call an async function until it completes without throwing an
+// exception
+export async function retryForever<T>(fn: () => Promise<T>): Promise<T> {
+  let retries = 0;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    try {
+      return await fn();
+    } catch (err) {
+      await backoff(++retries);
+    }
+  }
+}

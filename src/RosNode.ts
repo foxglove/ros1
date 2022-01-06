@@ -20,6 +20,7 @@ import { TcpConnection } from "./TcpConnection";
 import { TcpPublisher } from "./TcpPublisher";
 import { TcpSocketCreate, TcpServer, TcpAddress, NetworkInterface } from "./TcpTypes";
 import { RosXmlRpcResponse } from "./XmlRpcTypes";
+import { retryForever } from "./backoff";
 import { difference } from "./difference";
 import { isEmptyPlainObject } from "./objectTests";
 
@@ -134,7 +135,11 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
     this.rosFollower.close();
 
     if (this.parameters.size > 0) {
-      void this.unsubscribeAllParams();
+      this.unsubscribeAllParams().catch((unk) => {
+        const err = unk instanceof Error ? unk : new Error(unk as string);
+        this._log?.warn?.(err.message, "shutdown");
+        this.emit("error", err);
+      });
     }
 
     for (const subTopic of Array.from(this.subscriptions.keys())) {
@@ -169,7 +174,13 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
 
     // Asynchronously register this subscription with rosmaster and connect to
     // each publisher
-    void this._registerSubscriberAndConnect(subscription);
+    this._registerSubscriberAndConnect(subscription).catch((err) => {
+      // This should never be called, this._registerSubscriberAndConnect() is not expected to throw
+      this._log?.warn?.(
+        `subscribe registration and connection unexpectedly failed: ${err}`,
+        "subscribe",
+      );
+    });
 
     return subscription;
   }
@@ -247,7 +258,10 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
       return false;
     }
 
-    void this._unregisterSubscriber(topic);
+    this._unregisterSubscriber(topic).catch((err) => {
+      // This should never happen
+      this._log?.warn?.(`unregisterSubscriber failed for ${topic}: ${err}`);
+    });
 
     subscription.close();
     this.subscriptions.delete(topic);
@@ -260,7 +274,10 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
       return false;
     }
 
-    void this._unregisterPublisher(topic);
+    this._unregisterPublisher(topic).catch((err) => {
+      // This should never happen
+      this._log?.warn?.(`_unregisterPublisher failed for ${topic}: ${err}`);
+    });
 
     publication.close();
     this.publications.delete(topic);
@@ -529,7 +546,10 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
     // Add any new publishers that have appeared
     for (const addPub of added) {
       this._log?.info?.(`publisher ${addPub} for ${sub.name} came online, connecting`);
-      void this._subscribeToPublisher(addPub, sub);
+      this._subscribeToPublisher(addPub, sub).catch((err) => {
+        // This should never be called, this._subscribeToPublisher() is not expected to throw
+        this._log?.warn?.(`subscribe to publisher unexpectedly failed: ${err}`);
+      });
     }
 
     this.emit("publisherUpdate", { topic, publishers, prevPublishers, callerId });
@@ -580,13 +600,13 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
       throw new Error(`registerSubscriber() failed. status=${status}, msg="${msg}"`);
     }
 
-    this._log?.debug?.(`registered subscriber to ${subscription.name} (${subscription.dataType})`);
     if (!Array.isArray(publishers)) {
       throw new Error(
         `registerSubscriber() did not receive a list of publishers. value=${publishers}`,
       );
     }
 
+    this._log?.debug?.(`registered subscriber to ${subscription.name} (${subscription.dataType})`);
     return publishers as string[];
   }
 
@@ -669,19 +689,15 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
   }
 
   private async _registerSubscriberAndConnect(subscription: Subscription): Promise<void> {
-    const topic = subscription.name;
-
-    if (!this.isSubscribedTo(topic)) {
-      return;
-    }
-
-    // Register with with rosmaster as a subscriber to the requested topic. If
-    // this request fails, an exception is thrown
-    const publishers = await this._registerSubscriber(subscription);
-
-    if (!this.isSubscribedTo(topic)) {
-      return;
-    }
+    // Register with rosmaster as a subscriber to the requested topic. Continue
+    // retrying until the XML-RPC call to roscore succeeds, or we are no longer
+    // subscribed
+    const publishers = await retryForever(async () => {
+      if (!this.isSubscribedTo(subscription.name)) {
+        return [];
+      }
+      return await this._registerSubscriber(subscription);
+    });
 
     // Register with each publisher. Any failures communicating with individual node XML-RPC servers
     // or TCP sockets will be caught and retried
@@ -737,7 +753,11 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
       );
 
       if (!this.isSubscribedTo(topic)) {
-        void socket.close();
+        socket.close().catch((err) => {
+          this._log?.warn?.(
+            `closing connection to ${address}:${port} for topic "${topic}" failed: ${err}`,
+          );
+        });
         return;
       }
 
@@ -760,7 +780,12 @@ export class RosNode extends EventEmitter<RosNodeEvents> {
     }
 
     // Asynchronously initiate the socket connection. This will enter a retry loop on failure
-    void connection.connect();
+    connection.connect().catch((err) => {
+      // This should never happen, connect() is assumed not to throw
+      this._log?.warn?.(
+        `connecting to ${address}:${port} for topic "${topic}" unexpectedly failed: ${err}`,
+      );
+    });
   }
 
   static GetRosHostname(
