@@ -29,8 +29,10 @@
     data-uri-to-buffer "^3.0.1"
     fetch-blob "^2.1.1"
 
-"@foxglove/ros1@file:../..":
+"@foxglove/ros1@latest":
   version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@foxglove/ros1/-/ros1-1.4.0.tgz#20a870461127b0014273a6a4456c7a21ed06000e"
+  integrity sha512-SQg23SMLgm2gSXEDNrQLShDp5N38UdxJYYEj0vWILXIGZCxfLxctCgJPgYPeNdGNHx+w6TNtMg1uWfTOl4CxBw==
   dependencies:
     "@foxglove/rosmsg" "^2.0.0 || ^3.0.0"
     "@foxglove/rosmsg-serialization" "^1.2.3"
