@@ -358,10 +358,10 @@
   dependencies:
     md5-typescript "^1.0.5"
 
-"@foxglove/xmlrpc@^1.1.7":
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/@foxglove/xmlrpc/-/xmlrpc-1.1.7.tgz#ddda571dcaec73c96d3e718b34ffc14d3374fd0b"
-  integrity sha512-t7g+YgWD2U+AwqfCsPD/IxmJZFxeFF1PMhsjpZUahXCOMHoLbkI4GftPKX/IiFCBD8Cy/nkh/oTXctXceRCerA==
+"@foxglove/xmlrpc@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/@foxglove/xmlrpc/-/xmlrpc-1.1.8.tgz#95512d38fc0aef32f5de9023c86432f449e385f6"
+  integrity sha512-BrEdB45FJ/Tilk9utSV2Gn1GTB2Z/699UoO7PN/ZyCtENAVv7hK9W3hxxdoGAM+xP9/7bI8HjZxzo5OSwELSmg==
   dependencies:
     "@foxglove/just-fetch" "^1.2.4"
     byte-base64 "^1.1.0"

@@ -29,20 +29,18 @@
     data-uri-to-buffer "^3.0.1"
     fetch-blob "^2.1.1"
 
-"@foxglove/ros1@latest":
+"@foxglove/ros1@file:../..":
   version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@foxglove/ros1/-/ros1-1.4.0.tgz#20a870461127b0014273a6a4456c7a21ed06000e"
-  integrity sha512-SQg23SMLgm2gSXEDNrQLShDp5N38UdxJYYEj0vWILXIGZCxfLxctCgJPgYPeNdGNHx+w6TNtMg1uWfTOl4CxBw==
   dependencies:
     "@foxglove/rosmsg" "^2.0.0 || ^3.0.0"
     "@foxglove/rosmsg-serialization" "^1.2.3"
-    "@foxglove/xmlrpc" "^1.1.6"
+    "@foxglove/xmlrpc" "^1.1.8"
     eventemitter3 "^4.0.7"
 
 "@foxglove/rosmsg-serialization@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@foxglove/rosmsg-serialization/-/rosmsg-serialization-1.2.3.tgz#742adc7a322357b0a19aaebb4fe7c2c557f55e92"
-  integrity sha512-wXYqEtcJAXjJEKxxB18tx/3bbI2peQdbqzIWYnCCf9VwVDLk57O/fGqHLJnH5hUH4I37khE/Q0xU/JXSUrp46A==
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@foxglove/rosmsg-serialization/-/rosmsg-serialization-1.3.0.tgz#09df28ada98e117f71ed4f63e4ffee179d8a726e"
+  integrity sha512-8at2IJOU9BrQ4PkDfbBXY5AU0SA9iXTQPfa6M0GEwDajjsl3J7SChJjoncDvNqW5UlcDIiqZg6r2EGs4imVIwQ==
   dependencies:
     "@foxglove/rosmsg" "^2.0.0 || ^3.0.0"
 
@@ -53,10 +51,10 @@
   dependencies:
     md5-typescript "^1.0.5"
 
-"@foxglove/xmlrpc@^1.1.6":
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/@foxglove/xmlrpc/-/xmlrpc-1.1.6.tgz#29e5cf8f38641b8629946381e3cfe22f9c1cab77"
-  integrity sha512-R6JMgJUtltvoyxdjk1zG9C3d092ABAcxRmwjUsdh/xNowNiB9sOKtzn4SctuBFEi+fME6x53SO/2U6hu5rZTPg==
+"@foxglove/xmlrpc@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/@foxglove/xmlrpc/-/xmlrpc-1.1.8.tgz#95512d38fc0aef32f5de9023c86432f449e385f6"
+  integrity sha512-BrEdB45FJ/Tilk9utSV2Gn1GTB2Z/699UoO7PN/ZyCtENAVv7hK9W3hxxdoGAM+xP9/7bI8HjZxzo5OSwELSmg==
   dependencies:
     "@foxglove/just-fetch" "^1.2.4"
     byte-base64 "^1.1.0"
@@ -113,9 +111,9 @@
   integrity sha512-eZxlbI8GZscaGS7kkc/trHTT5xgrjH3/1n2JDwusC9iahPKWMRvRjJSAN5mCXviuTGQ/lHnhvv8Q1YTpnfz9gA==
 
 "@types/node@*":
-  version "16.11.7"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.7.tgz#36820945061326978c42a01e56b61cd223dfdc42"
-  integrity sha512-QB5D2sqfSjCmTuWcBWyJ+/44bcjO7VbjSbOE0ucoVbAsSNQc4Lt6QkgkVXkTDwkL4z/beecZNDvVX15D4P8Jbw==
+  version "17.0.23"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.23.tgz#3b41a6e643589ac6442bdbd7a4a3ded62f33f7da"
+  integrity sha512-UxDxWn7dl97rKVeVS61vErvw086aCYhDLyvRQZ5Rk65rZKepaFdm53GeqXaKBuOhED4e9uWq34IC3TdSdJJ2Gw==
 
 acorn-walk@^8.1.1:
   version "8.2.0"

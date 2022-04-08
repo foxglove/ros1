@@ -29,14 +29,12 @@
     data-uri-to-buffer "^3.0.1"
     fetch-blob "^2.1.1"
 
-"@foxglove/ros1@latest":
+"@foxglove/ros1@file:../..":
   version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@foxglove/ros1/-/ros1-1.4.0.tgz#20a870461127b0014273a6a4456c7a21ed06000e"
-  integrity sha512-SQg23SMLgm2gSXEDNrQLShDp5N38UdxJYYEj0vWILXIGZCxfLxctCgJPgYPeNdGNHx+w6TNtMg1uWfTOl4CxBw==
   dependencies:
     "@foxglove/rosmsg" "^2.0.0 || ^3.0.0"
     "@foxglove/rosmsg-serialization" "^1.2.3"
-    "@foxglove/xmlrpc" "^1.1.6"
+    "@foxglove/xmlrpc" "^1.1.8"
     eventemitter3 "^4.0.7"
 
 "@foxglove/rosmsg-serialization@^1.2.3":
@@ -53,10 +51,10 @@
   dependencies:
     md5-typescript "^1.0.5"
 
-"@foxglove/xmlrpc@^1.1.6":
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/@foxglove/xmlrpc/-/xmlrpc-1.1.6.tgz#29e5cf8f38641b8629946381e3cfe22f9c1cab77"
-  integrity sha512-R6JMgJUtltvoyxdjk1zG9C3d092ABAcxRmwjUsdh/xNowNiB9sOKtzn4SctuBFEi+fME6x53SO/2U6hu5rZTPg==
+"@foxglove/xmlrpc@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/@foxglove/xmlrpc/-/xmlrpc-1.1.8.tgz#95512d38fc0aef32f5de9023c86432f449e385f6"
+  integrity sha512-BrEdB45FJ/Tilk9utSV2Gn1GTB2Z/699UoO7PN/ZyCtENAVv7hK9W3hxxdoGAM+xP9/7bI8HjZxzo5OSwELSmg==
   dependencies:
     "@foxglove/just-fetch" "^1.2.4"
     byte-base64 "^1.1.0"
