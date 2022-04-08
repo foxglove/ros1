@@ -45,8 +45,6 @@ async function main() {
       void rosNode.publish("/chatter", { data: "Hello, world!" });
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
-
-    rosNode.shutdown();
   } catch (err) {
     const msg = (err as Error).stack ?? `${err}`;
     console.error(msg);
