@@ -34,7 +34,7 @@
   dependencies:
     "@foxglove/rosmsg" "^2.0.0 || ^3.0.0"
     "@foxglove/rosmsg-serialization" "^1.2.3"
-    "@foxglove/xmlrpc" "^1.1.8"
+    "@foxglove/xmlrpc" "^1.1.9"
     eventemitter3 "^4.0.7"
 
 "@foxglove/rosmsg-serialization@^1.2.3":
@@ -51,10 +51,10 @@
   dependencies:
     md5-typescript "^1.0.5"
 
-"@foxglove/xmlrpc@^1.1.8":
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/@foxglove/xmlrpc/-/xmlrpc-1.1.8.tgz#95512d38fc0aef32f5de9023c86432f449e385f6"
-  integrity sha512-BrEdB45FJ/Tilk9utSV2Gn1GTB2Z/699UoO7PN/ZyCtENAVv7hK9W3hxxdoGAM+xP9/7bI8HjZxzo5OSwELSmg==
+"@foxglove/xmlrpc@^1.1.9":
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/@foxglove/xmlrpc/-/xmlrpc-1.1.9.tgz#15d338f585b538865c0a281d2787a4204721389e"
+  integrity sha512-Lf49vDIh3ewAEtYqI7IeczLfxC4YHRqyavE613KlOoPkBvVrkkjco4lJuFKiSNd0AieJN9D2GV3vZpe5sa2/Cw==
   dependencies:
     "@foxglove/just-fetch" "^1.2.4"
     byte-base64 "^1.1.0"
