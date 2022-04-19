@@ -62,7 +62,9 @@ export class Publication {
     const tasks: Promise<void>[] = [];
     for (const sub of this._subscribers.values()) {
       if (sub.client.transportType() === transportType) {
-        tasks.push(sub.client.write(data));
+        // A defensive copy of the data is needed here. The
+        // source data array gets "detached".
+        tasks.push(sub.client.write(new Uint8Array(data)));
       }
     }
     await Promise.allSettled(tasks);
