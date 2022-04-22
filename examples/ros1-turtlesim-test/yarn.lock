@@ -30,11 +30,11 @@
     fetch-blob "^2.1.1"
 
 "@foxglove/ros1@file:../..":
-  version "1.4.0"
+  version "1.4.2"
   dependencies:
     "@foxglove/rosmsg" "^2.0.0 || ^3.0.0"
     "@foxglove/rosmsg-serialization" "^1.2.3"
-    "@foxglove/xmlrpc" "^1.1.9"
+    "@foxglove/xmlrpc" "^1.2.0"
     eventemitter3 "^4.0.7"
 
 "@foxglove/rosmsg-serialization@^1.2.3":
@@ -51,10 +51,10 @@
   dependencies:
     md5-typescript "^1.0.5"
 
-"@foxglove/xmlrpc@^1.1.9":
-  version "1.1.9"
-  resolved "https://registry.yarnpkg.com/@foxglove/xmlrpc/-/xmlrpc-1.1.9.tgz#15d338f585b538865c0a281d2787a4204721389e"
-  integrity sha512-Lf49vDIh3ewAEtYqI7IeczLfxC4YHRqyavE613KlOoPkBvVrkkjco4lJuFKiSNd0AieJN9D2GV3vZpe5sa2/Cw==
+"@foxglove/xmlrpc@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@foxglove/xmlrpc/-/xmlrpc-1.2.0.tgz#90018a21ab2c897cfbc268d74fe9f7401123926a"
+  integrity sha512-zY1uL0sVaT+8Ekn72eN85n0Q5sMbcOYNjyum2B9Qqvh9w1vty5q6HwO0Gg5HJj65lpiGZTjuEzKM4drEMaY2Ng==
   dependencies:
     "@foxglove/just-fetch" "^1.2.4"
     byte-base64 "^1.1.0"
@@ -111,9 +111,9 @@
   integrity sha512-eZxlbI8GZscaGS7kkc/trHTT5xgrjH3/1n2JDwusC9iahPKWMRvRjJSAN5mCXviuTGQ/lHnhvv8Q1YTpnfz9gA==
 
 "@types/node@*":
-  version "17.0.23"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.23.tgz#3b41a6e643589ac6442bdbd7a4a3ded62f33f7da"
-  integrity sha512-UxDxWn7dl97rKVeVS61vErvw086aCYhDLyvRQZ5Rk65rZKepaFdm53GeqXaKBuOhED4e9uWq34IC3TdSdJJ2Gw==
+  version "17.0.25"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.25.tgz#527051f3c2f77aa52e5dc74e45a3da5fb2301448"
+  integrity sha512-wANk6fBrUwdpY4isjWrKTufkrXdu1D2YHCot2fD/DfWxF5sMrVSA+KN7ydckvaTCh0HiqX9IVl0L5/ZoXg5M7w==
 
 acorn-walk@^8.1.1:
   version "8.2.0"
@@ -230,9 +230,9 @@ typescript@4.5.2:
   integrity sha512-5BlMof9H1yGt0P8/WF+wPNw6GfctgGjXp5hkblpyT+8rkASSmkUKMXrxR0Xg8ThVCi/JnHQiKXeBaEwCeQwMFw==
 
 v8-compile-cache-lib@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/v8-compile-cache-lib/-/v8-compile-cache-lib-3.0.0.tgz#0582bcb1c74f3a2ee46487ceecf372e46bce53e8"
-  integrity sha512-mpSYqfsFvASnSn5qMiwrr4VKfumbPyONLCOPmsR3A6pTY/r0+tSaVbgPWSAIuzbk3lCTa+FForeTiO+wBQGkjA==
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/v8-compile-cache-lib/-/v8-compile-cache-lib-3.0.1.tgz#6336e8d71965cb3d35a1bbb7868445a7c05264bf"
+  integrity sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==
 
 xmlbuilder2@^3.0.2:
   version "3.0.2"
