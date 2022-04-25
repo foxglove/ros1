@@ -1,6 +1,6 @@
 {
   "name": "ros1-chatter",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Example @foxglove/ros1 client that publishes to /chatter",
   "license": "MIT",
   "private": true,
