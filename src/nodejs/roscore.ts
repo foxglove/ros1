@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { HttpServerNodejs } from "@foxglove/xmlrpc/nodejs";
 
 import { RosMaster } from "../RosMaster";

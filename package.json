@@ -34,6 +34,9 @@
     "nodejs.d.ts",
     "nodejs.js"
   ],
+  "bin": {
+    "roscore": "./dist/nodejs/roscore.js"
+  },
   "scripts": {
     "build": "tsc -b",
     "lint:ci": "eslint --report-unused-disable-directives .",
