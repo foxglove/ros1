@@ -196,7 +196,7 @@ export class TcpClient extends EventEmitter<TcpClientEvents> implements Client {
     this._stats.bytesReceived += msgData.byteLength;
 
     // Check the dataType matches
-    if (pub.dataType !== dataType) {
+    if (dataType !== "*" && pub.dataType !== dataType) {
       this._log?.warn?.(
         `tcp client ${this.toString()} attempted to subscribe to topic ${topic} with type "${dataType}", expected "${
           pub.dataType
