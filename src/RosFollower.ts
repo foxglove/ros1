@@ -189,11 +189,12 @@ export class RosFollower extends EventEmitter<RosFollowerEvents> {
     }
 
     const addr = await this._rosNode.tcpServerAddress();
+    const hostname = this._rosNode.hostname;
     if (addr == undefined) {
       return [0, "cannot receive incoming connections", []];
     }
 
-    const tcp = ["TCPROS", addr.address, addr.port];
+    const tcp = ["TCPROS", hostname, addr.port];
     return [1, "", tcp];
   };
 }
