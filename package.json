@@ -71,7 +71,7 @@
   "dependencies": {
     "@foxglove/rosmsg": "^3.1.0",
     "@foxglove/rosmsg-serialization": "^1.5.2",
-    "@foxglove/xmlrpc": "^1.2.1",
+    "@foxglove/xmlrpc": "github:foxglove/xmlrpc#977263a91d49ec2998342688b55854261ff18a9c",
     "eventemitter3": "^4.0.7"
   }
 }

@@ -1,4 +1,4 @@
-import { HttpServer, XmlRpcServer, XmlRpcValue } from "@foxglove/xmlrpc";
+import { HttpServer, HttpRequest, XmlRpcServer, XmlRpcValue } from "@foxglove/xmlrpc";
 import { EventEmitter } from "eventemitter3";
 
 import { RosNode } from "./RosNode";
@@ -172,7 +172,11 @@ export class RosFollower extends EventEmitter<RosFollowerEvents> {
     return [1, "", 0];
   };
 
-  requestTopic = async (_: string, args: XmlRpcValue[]): Promise<RosXmlRpcResponse> => {
+  requestTopic = async (
+    _: string,
+    args: XmlRpcValue[],
+    req?: HttpRequest,
+  ): Promise<RosXmlRpcResponse> => {
     const err = CheckArguments(args, ["string", "string", "*"]);
     if (err != null) {
       throw err;
@@ -193,7 +197,8 @@ export class RosFollower extends EventEmitter<RosFollowerEvents> {
       return [0, "cannot receive incoming connections", []];
     }
 
-    const tcp = ["TCPROS", addr.address, addr.port];
+    const address = req.socket?.localAddress ?? addr.address;
+    const tcp = ["TCPROS", address, addr.port];
     return [1, "", tcp];
   };
 }

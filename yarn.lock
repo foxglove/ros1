@@ -559,10 +559,9 @@
   dependencies:
     md5-typescript "^1.0.5"
 
-"@foxglove/xmlrpc@^1.2.1":
+"@foxglove/xmlrpc@github:foxglove/xmlrpc#977263a91d49ec2998342688b55854261ff18a9c":
   version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@foxglove/xmlrpc/-/xmlrpc-1.2.1.tgz#368ece22e71073755735ef81771efbbc1bb6e614"
-  integrity sha512-bZrMh/Hp3QzOhM0oUC5Hn+9VB70cXK0eWJtud647+c1X6q2T89ZlOz4YPSeiIZE2QRMwOhwokJz/T37vfN4LOw==
+  resolved "https://codeload.github.com/foxglove/xmlrpc/tar.gz/977263a91d49ec2998342688b55854261ff18a9c"
   dependencies:
     "@foxglove/just-fetch" "^1.2.4"
     byte-base64 "^1.1.0"
