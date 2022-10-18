@@ -1,9 +1,9 @@
 import { HttpServer, HttpRequest, XmlRpcServer, XmlRpcValue } from "@foxglove/xmlrpc";
 import { EventEmitter } from "eventemitter3";
+import { process as ipaddrProcess } from "ipaddr.js";
 
 import { RosNode } from "./RosNode";
 import { RosXmlRpcResponse } from "./XmlRpcTypes";
-import { process as ipaddrProcess } from "ipaddr.js";
 
 function CheckArguments(args: XmlRpcValue[], expected: string[]): Error | undefined {
   if (args.length !== expected.length) {
