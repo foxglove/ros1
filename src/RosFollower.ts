@@ -206,7 +206,10 @@ export class RosFollower extends EventEmitter<RosFollowerEvents> {
     // tpcros destination address increases the chance the client will be able to establish a
     // connection to the publishing node since it has already made a successful xmlrpc request to
     // the same address.
+    //
+    // Note: We still use `addr.port` because we need the _port_ of the TCP server not the HTTP
+    // xmlrpc server.
     const socketLocalAddress = ipaddrProcess(req?.socket?.localAddress ?? addr.address);
-    return [1, "", ["TCPROS", socketLocalAddress.toString(), req?.socket?.localPort ?? addr.port]];
+    return [1, "", ["TCPROS", socketLocalAddress.toString(), addr.port]];
   };
 }
