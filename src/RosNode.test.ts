@@ -23,7 +23,7 @@ describe("RosNode", () => {
       rosMasterUri,
       httpServer: new HttpServerNodejs(),
       tcpSocketCreate: TcpSocketNode.Create,
-      tcpServer: await TcpServerNode.Listen({}),
+      tcpServer: await TcpServerNode.Listen({ host: "0.0.0.0" }),
       // log: console,
     });
     nodeA.on("error", (err) => (errA = err));
@@ -35,7 +35,7 @@ describe("RosNode", () => {
       rosMasterUri,
       httpServer: new HttpServerNodejs(),
       tcpSocketCreate: TcpSocketNode.Create,
-      tcpServer: await TcpServerNode.Listen({}),
+      tcpServer: await TcpServerNode.Listen({ host: "0.0.0.0" }),
       // log: console,
     });
     nodeB.on("error", (err) => (errB = err));

@@ -1,5 +1,6 @@
-import { HttpServer, XmlRpcServer, XmlRpcValue } from "@foxglove/xmlrpc";
+import { HttpServer, HttpRequest, XmlRpcServer, XmlRpcValue } from "@foxglove/xmlrpc";
 import { EventEmitter } from "eventemitter3";
+import ipaddr from "ipaddr.js";
 
 import { RosNode } from "./RosNode";
 import { RosXmlRpcResponse } from "./XmlRpcTypes";
@@ -172,7 +173,11 @@ export class RosFollower extends EventEmitter<RosFollowerEvents> {
     return [1, "", 0];
   };
 
-  requestTopic = async (_: string, args: XmlRpcValue[]): Promise<RosXmlRpcResponse> => {
+  requestTopic = async (
+    _: string,
+    args: XmlRpcValue[],
+    req?: HttpRequest,
+  ): Promise<RosXmlRpcResponse> => {
     const err = CheckArguments(args, ["string", "string", "*"]);
     if (err != null) {
       throw err;
@@ -193,7 +198,18 @@ export class RosFollower extends EventEmitter<RosFollowerEvents> {
       return [0, "cannot receive incoming connections", []];
     }
 
-    const tcp = ["TCPROS", addr.address, addr.port];
-    return [1, "", tcp];
+    // ROS subscriber clients use the address and port response arguments to determine where to
+    // establish a connection to receive messages. ROS clients may be on the local machine or on
+    // remote hosts. To better support subscribers on local or remote hosts, we attempt to use the
+    // socket localAddress of the xmlrpc request if it present. Since the xmlrpc server and tcp
+    // socket publishers are launched within the same node, echoing the localAddress back as the
+    // tpcros destination address increases the chance the client will be able to establish a
+    // connection to the publishing node since it has already made a successful xmlrpc request to
+    // the same address.
+    //
+    // Note: We still use `addr.port` because we need the _port_ of the TCP server not the HTTP
+    // xmlrpc server.
+    const socketLocalAddress = ipaddr.process(req?.socket?.localAddress ?? addr.address);
+    return [1, "", ["TCPROS", socketLocalAddress.toString(), addr.port]];
   };
 }

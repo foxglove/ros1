@@ -559,10 +559,10 @@
   dependencies:
     md5-typescript "^1.0.5"
 
-"@foxglove/xmlrpc@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@foxglove/xmlrpc/-/xmlrpc-1.2.1.tgz#368ece22e71073755735ef81771efbbc1bb6e614"
-  integrity sha512-bZrMh/Hp3QzOhM0oUC5Hn+9VB70cXK0eWJtud647+c1X6q2T89ZlOz4YPSeiIZE2QRMwOhwokJz/T37vfN4LOw==
+"@foxglove/xmlrpc@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@foxglove/xmlrpc/-/xmlrpc-1.3.0.tgz#37c3054066a0556858244881f6aa631a794cf6fb"
+  integrity sha512-L9S4wrrUh83BycDmQAOTR2oY6PUXW9pCdT8rMIRLkxsdY4hwOpTc9lkeQDg3kO1OjHfiTHfUagvnzXIsMSmsYQ==
   dependencies:
     "@foxglove/just-fetch" "^1.2.4"
     byte-base64 "^1.1.0"
@@ -2295,6 +2295,11 @@ internal-slot@^1.0.3:
     get-intrinsic "^1.1.0"
     has "^1.0.3"
     side-channel "^1.0.4"
+
+ipaddr.js@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-2.0.1.tgz#eca256a7a877e917aeb368b0a7497ddf42ef81c0"
+  integrity sha512-1qTgH9NG+IIJ4yfKs2e6Pp1bZg8wbDbKHT21HrLIeYBTRLgMYKnMTPAuI3Lcs61nfx5h1xlXnbJtH1kX5/d/ng==
 
 is-arrayish@^0.2.1:
   version "0.2.1"

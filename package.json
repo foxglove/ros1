@@ -71,7 +71,8 @@
   "dependencies": {
     "@foxglove/rosmsg": "^3.1.0",
     "@foxglove/rosmsg-serialization": "^1.5.2",
-    "@foxglove/xmlrpc": "^1.2.1",
-    "eventemitter3": "^4.0.7"
+    "@foxglove/xmlrpc": "^1.3.0",
+    "eventemitter3": "^4.0.7",
+    "ipaddr.js": "^2.0.1"
   }
 }
