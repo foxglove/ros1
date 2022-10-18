@@ -1,6 +1,6 @@
 import { HttpServer, HttpRequest, XmlRpcServer, XmlRpcValue } from "@foxglove/xmlrpc";
 import { EventEmitter } from "eventemitter3";
-import { process as ipaddrProcess } from "ipaddr.js";
+import ipaddr from "ipaddr.js";
 
 import { RosNode } from "./RosNode";
 import { RosXmlRpcResponse } from "./XmlRpcTypes";
@@ -209,7 +209,7 @@ export class RosFollower extends EventEmitter<RosFollowerEvents> {
     //
     // Note: We still use `addr.port` because we need the _port_ of the TCP server not the HTTP
     // xmlrpc server.
-    const socketLocalAddress = ipaddrProcess(req?.socket?.localAddress ?? addr.address);
+    const socketLocalAddress = ipaddr.process(req?.socket?.localAddress ?? addr.address);
     return [1, "", ["TCPROS", socketLocalAddress.toString(), addr.port]];
   };
 }
