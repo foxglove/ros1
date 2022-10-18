@@ -3,6 +3,7 @@ import { EventEmitter } from "eventemitter3";
 
 import { RosNode } from "./RosNode";
 import { RosXmlRpcResponse } from "./XmlRpcTypes";
+import { process as ipaddrProcess } from "ipaddr.js";
 
 function CheckArguments(args: XmlRpcValue[], expected: string[]): Error | undefined {
   if (args.length !== expected.length) {
@@ -197,8 +198,15 @@ export class RosFollower extends EventEmitter<RosFollowerEvents> {
       return [0, "cannot receive incoming connections", []];
     }
 
-    const address = req.socket?.localAddress ?? addr.address;
-    const tcp = ["TCPROS", address, addr.port];
-    return [1, "", tcp];
+    // ROS subscriber clients use the address and port response arguments to determine where to
+    // establish a connection to receive messages. ROS clients may be on the local machine or on
+    // remote hosts. To better support subscribers on local or remote hosts, we attempt to use the
+    // socket localAddress of the xmlrpc request if it present. Since the xmlrpc server and tcp
+    // socket publishers are launched within the same node, echoing the localAddress back as the
+    // tpcros destination address increases the chance the client will be able to establish a
+    // connection to the publishing node since it has already made a successful xmlrpc request to
+    // the same address.
+    const socketLocalAddress = ipaddrProcess(req?.socket?.localAddress ?? addr.address);
+    return [1, "", ["TCPROS", socketLocalAddress.toString(), req?.socket?.localPort ?? addr.port]];
   };
 }
