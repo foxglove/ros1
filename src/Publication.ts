@@ -1,4 +1,4 @@
-import { RosMsgDefinition } from "@foxglove/rosmsg";
+import { MessageDefinition } from "@foxglove/message-definition";
 import { MessageWriter } from "@foxglove/rosmsg-serialization";
 
 import { Client } from "./Client";
@@ -16,7 +16,7 @@ export class Publication {
   readonly md5sum: string;
   readonly dataType: string;
   readonly latching: boolean;
-  readonly messageDefinition: RosMsgDefinition[];
+  readonly messageDefinition: MessageDefinition[];
   readonly messageDefinitionText: string;
   readonly messageWriter: MessageWriter;
   private _latched = new Map<string, Uint8Array>();
@@ -28,7 +28,7 @@ export class Publication {
     dataType: string,
     // eslint-disable-next-line @foxglove/no-boolean-parameters
     latching: boolean,
-    messageDefinition: RosMsgDefinition[],
+    messageDefinition: MessageDefinition[],
     messageDefinitionText: string,
     messageWriter: MessageWriter,
   ) {

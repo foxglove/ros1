@@ -1,4 +1,5 @@
-import { parse as parseMessageDefinition, RosMsgDefinition } from "@foxglove/rosmsg";
+import { parse as parseMessageDefinition } from "@foxglove/rosmsg";
+import { MessageDefinition } from "@foxglove/message-definition";
 import { LazyMessageReader } from "@foxglove/rosmsg-serialization";
 import { EventEmitter } from "eventemitter3";
 
@@ -11,7 +12,7 @@ import { backoff } from "./backoff";
 export interface TcpConnectionEvents {
   header: (
     header: Map<string, string>,
-    messageDefinition: RosMsgDefinition[],
+    messageDefinition: MessageDefinition[],
     messageReader: LazyMessageReader,
   ) => void;
   message: (msg: unknown, msgData: Uint8Array) => void;
@@ -44,7 +45,7 @@ export class TcpConnection extends EventEmitter<TcpConnectionEvents> implements 
     dropEstimate: -1,
   };
   private _transformer = new RosTcpMessageStream();
-  private _msgDefinition: RosMsgDefinition[] = [];
+  private _msgDefinition: MessageDefinition[] = [];
   private _msgReader: LazyMessageReader | undefined;
   private _log?: LoggerService;
 
@@ -119,7 +120,7 @@ export class TcpConnection extends EventEmitter<TcpConnectionEvents> implements 
     return this._stats;
   }
 
-  messageDefinition(): RosMsgDefinition[] {
+  messageDefinition(): MessageDefinition[] {
     return this._msgDefinition;
   }
 

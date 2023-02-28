@@ -2,8 +2,8 @@ import {
   parse as parseMessageDefinition,
   md5 as rosMsgMd5sum,
   stringify as rosMsgDefinitionText,
-  RosMsgDefinition,
 } from "@foxglove/rosmsg";
+import { MessageDefinition } from "@foxglove/message-definition";
 import { MessageWriter } from "@foxglove/rosmsg-serialization";
 import { HttpServer, XmlRpcFault, XmlRpcValue } from "@foxglove/xmlrpc";
 import { EventEmitter } from "eventemitter3";
@@ -41,7 +41,7 @@ export type PublishOpts = {
   topic: string;
   dataType: string;
   latching?: boolean;
-  messageDefinition?: RosMsgDefinition[];
+  messageDefinition?: MessageDefinition[];
   messageDefinitionText?: string;
   md5sum?: string;
 };

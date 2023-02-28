@@ -1,4 +1,4 @@
-import { RosMsgDefinition } from "@foxglove/rosmsg";
+import { MessageDefinition } from "@foxglove/message-definition";
 import { LazyMessageReader } from "@foxglove/rosmsg-serialization";
 import { EventEmitter } from "eventemitter3";
 
@@ -35,7 +35,7 @@ type SubscriptionOpts = {
 export interface SubscriptionEvents {
   header: (
     header: Map<string, string>,
-    msgDef: RosMsgDefinition[],
+    msgDef: MessageDefinition[],
     msgReader: LazyMessageReader,
   ) => void;
   message: (msg: unknown, data: Uint8Array, publisher: PublisherLink) => void;
