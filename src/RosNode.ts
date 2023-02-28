@@ -1,9 +1,9 @@
+import { MessageDefinition } from "@foxglove/message-definition";
 import {
   parse as parseMessageDefinition,
   md5 as rosMsgMd5sum,
   stringify as rosMsgDefinitionText,
 } from "@foxglove/rosmsg";
-import { MessageDefinition } from "@foxglove/message-definition";
 import { MessageWriter } from "@foxglove/rosmsg-serialization";
 import { HttpServer, XmlRpcFault, XmlRpcValue } from "@foxglove/xmlrpc";
 import { EventEmitter } from "eventemitter3";

@@ -1,5 +1,5 @@
-import { parse as parseMessageDefinition } from "@foxglove/rosmsg";
 import { MessageDefinition } from "@foxglove/message-definition";
+import { parse as parseMessageDefinition } from "@foxglove/rosmsg";
 import { LazyMessageReader } from "@foxglove/rosmsg-serialization";
 import { EventEmitter } from "eventemitter3";
 

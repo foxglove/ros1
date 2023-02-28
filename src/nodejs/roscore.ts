@@ -2,9 +2,9 @@
 
 import { HttpServerNodejs } from "@foxglove/xmlrpc/nodejs";
 
+import { getEnvVar, getHostname, getNetworkInterfaces } from "./platform";
 import { RosMaster } from "../RosMaster";
 import { RosNode } from "../RosNode";
-import { getEnvVar, getHostname, getNetworkInterfaces } from "./platform";
 
 async function main() {
   const hostname = RosNode.GetRosHostname(getEnvVar, getHostname, getNetworkInterfaces);
