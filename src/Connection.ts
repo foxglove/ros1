@@ -1,4 +1,4 @@
-import { RosMsgDefinition } from "@foxglove/rosmsg";
+import { MessageDefinition } from "@foxglove/message-definition";
 import { LazyMessageReader } from "@foxglove/rosmsg-serialization";
 
 export interface ConnectionStats {
@@ -14,7 +14,7 @@ export interface Connection {
     eventName: "header",
     listener: (
       header: Map<string, string>,
-      msgDef: RosMsgDefinition[],
+      msgDef: MessageDefinition[],
       msgReader: LazyMessageReader,
     ) => void,
   ): this;
@@ -31,7 +31,7 @@ export interface Connection {
 
   stats(): ConnectionStats;
 
-  messageDefinition(): RosMsgDefinition[];
+  messageDefinition(): MessageDefinition[];
 
   messageReader(): LazyMessageReader | undefined;
 
