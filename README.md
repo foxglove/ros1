@@ -66,7 +66,7 @@ void main();
 
 ## License
 
-@foxglove/ros1 is licensed under [MIT License](https://opensource.org/licenses/MIT).
+@foxglove/ros1 is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
 ## Releasing
 
