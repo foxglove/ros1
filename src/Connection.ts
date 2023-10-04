@@ -1,5 +1,5 @@
 import { MessageDefinition } from "@foxglove/message-definition";
-import { LazyMessageReader } from "@foxglove/rosmsg-serialization";
+import { MessageReader } from "@foxglove/rosmsg-serialization";
 
 export interface ConnectionStats {
   bytesSent: number;
@@ -15,7 +15,7 @@ export interface Connection {
     listener: (
       header: Map<string, string>,
       msgDef: MessageDefinition[],
-      msgReader: LazyMessageReader,
+      msgReader: MessageReader,
     ) => void,
   ): this;
   on(eventName: "message", listener: (msg: unknown, data: Uint8Array) => void): this;
@@ -33,7 +33,7 @@ export interface Connection {
 
   messageDefinition(): MessageDefinition[];
 
-  messageReader(): LazyMessageReader | undefined;
+  messageReader(): MessageReader | undefined;
 
   close(): void;
 

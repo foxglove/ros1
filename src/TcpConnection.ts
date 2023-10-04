@@ -1,6 +1,6 @@
 import { MessageDefinition } from "@foxglove/message-definition";
 import { parse as parseMessageDefinition } from "@foxglove/rosmsg";
-import { LazyMessageReader } from "@foxglove/rosmsg-serialization";
+import { MessageReader } from "@foxglove/rosmsg-serialization";
 import { EventEmitter } from "eventemitter3";
 
 import { Connection, ConnectionStats } from "./Connection";
@@ -13,7 +13,7 @@ export interface TcpConnectionEvents {
   header: (
     header: Map<string, string>,
     messageDefinition: MessageDefinition[],
-    messageReader: LazyMessageReader,
+    messageReader: MessageReader,
   ) => void;
   message: (msg: unknown, msgData: Uint8Array) => void;
   error: (err: Error) => void;
@@ -46,7 +46,7 @@ export class TcpConnection extends EventEmitter<TcpConnectionEvents> implements 
   };
   private _transformer = new RosTcpMessageStream();
   private _msgDefinition: MessageDefinition[] = [];
-  private _msgReader: LazyMessageReader | undefined;
+  private _msgReader: MessageReader | undefined;
   private _log?: LoggerService;
 
   constructor(
@@ -124,7 +124,7 @@ export class TcpConnection extends EventEmitter<TcpConnectionEvents> implements 
     return this._msgDefinition;
   }
 
-  messageReader(): LazyMessageReader | undefined {
+  messageReader(): MessageReader | undefined {
     return this._msgReader;
   }
 
@@ -248,7 +248,7 @@ export class TcpConnection extends EventEmitter<TcpConnectionEvents> implements 
 
       this._header = TcpConnection.ParseHeader(msgData);
       this._msgDefinition = parseMessageDefinition(this._header.get("message_definition") ?? "");
-      this._msgReader = new LazyMessageReader(this._msgDefinition);
+      this._msgReader = new MessageReader(this._msgDefinition);
       this.emit("header", this._header, this._msgDefinition, this._msgReader);
     } else {
       this._stats.messagesReceived++;
@@ -256,12 +256,6 @@ export class TcpConnection extends EventEmitter<TcpConnectionEvents> implements 
       if (this._msgReader != null) {
         try {
           const bytes = new Uint8Array(msgData.buffer, msgData.byteOffset, msgData.length);
-          const msgSize = this._msgReader.size(bytes);
-          if (msgSize > bytes.byteLength) {
-            throw new Error(
-              `Cannot read ${msgSize} byte message from ${bytes.byteLength} byte buffer`,
-            );
-          }
           const msg = this._msgReader.readMessage(bytes);
           this.emit("message", msg, msgData);
         } catch (unk) {
