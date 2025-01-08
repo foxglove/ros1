@@ -1,5 +1,8 @@
 # @foxglove/ros1
 
+> [!IMPORTANT]
+> This package has moved to https://github.com/foxglove/ros-typescript.
+
 > _Standalone TypeScript implementation of the ROS 1 (Robot Operating System) protocol with a pluggable transport layer_
 
 [![npm version](https://img.shields.io/npm/v/@foxglove/ros1.svg?style=flat)](https://www.npmjs.com/package/@foxglove/ros1)
